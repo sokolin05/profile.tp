@@ -1,14 +1,6 @@
 ﻿#SingleInstance Force
 #NoEnv
-
-URLLib = "https://raw.githubusercontent.com/sookolin/profile.tp/main/Hotkey.ahk"
-MsgBox %URLLib%
-If FileExist("%A_Temp%\Hotkey.ahk")
-{
-    MsgBox jdfoidjsweodl
-    URLDownloadToFile, %URLLib%, %A_Temp%\Hotkey.ahk
-}
-#Include %A_Temp%\Hotkey.ahk
+#Include %A_Temp%\TP\Hotkey.ahk
 ; Script powered in 2024 by AHK Province & Techno's studio (techno)
 ; All rights reserwed
 ; vk.com/technostd
@@ -1731,8 +1723,7 @@ Return
         Gosub RaidOrderOff
         Return
         }
-        
-{  ; Текстовые бинды с метками
+         ; Текстовые бинды с метками
     Knock:
     SendChat("me постуча" lla " в окно", "0")
     Return
