@@ -242,7 +242,9 @@ ParamCheck()
 RefreshTray() ; Трэй
 {
 TrayTip, AHK ГИБДД #5 (%GuiVersion%), Скрипт успешно запущен.
-
+IM = %WorkingDir%\ahk.ico
+IfExist, %IM%
+Menu, Tray, Icon, %IM%
 Menu, Tray, NoStandard
 Menu, Tray, Add, VKowner
 Menu, Tray, Rename, VKowner, AHK Province
@@ -380,10 +382,10 @@ GetHotkeys()
 
 GetDefaultHotkeys()
 {
-    DefaultHotkeysPath = %WorkingDir%\default.tp.prv
-    URLDownloadToFile https://raw.githubusercontent.com/sookolin/profile.tp/main/default.tp.prv, %WorkingDir%\default.tp.prv
+    ; DefaultHotkeysPath = %%\default.tp.prv
+    URLDownloadToFile https://raw.githubusercontent.com/sookolin/profile.tp/main/default.tp.prv, %DefaultHotkeysPath%
 	PID := DllCall("GetCurrentProcessId")
-
+    
     for Field, Value in HotkeyFields
     {
         Label := SubStr(Field, 3)
@@ -401,6 +403,7 @@ GetDefaultHotkeys()
     
     
     RefreshHotkeys()
+    MsgBox Writed
     FileDelete, %DefaultHotkeysPath%
     ; TempDelete(PID, DefaultHotkeysPath)
 }
