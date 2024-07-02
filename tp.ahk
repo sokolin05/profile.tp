@@ -403,7 +403,7 @@ GetDefaultHotkeys()
     
     
     RefreshHotkeys()
-    MsgBox Writed
+    ; MsgBox Writed
     FileDelete, %DefaultHotkeysPath%
     ; TempDelete(PID, DefaultHotkeysPath)
 }
