@@ -20,11 +20,11 @@ Global HotkeySection := "TPHotkeys"
 Hotkey_IniPath(DataPath)
 Hotkey_IniSection("TPHotkeys")
 
-Global Version := "2.33"  
-Global GuiVersion := "2.3.1"
+Global Version := "2.40"  
+Global GuiVersion := "2.4.0"
 Global TextCreator = techno & Sokol
 Global TextGroup = AHK Province
-Global TextFooter := "by techno && Sokol | AHK Province ©2022-2024"
+Global TextFooter := "by techno && Sokol ft. Madjit_Martinez| AHK Province ©2022-2024"
 Global DataFields := ["City", "License", "Surname", "Name", "SecondName", "Rank", "Post", "Signature", "ProvLogPath", "Gender", "MB"]
 
 Global HotkeysEnabled := False
