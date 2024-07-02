@@ -8,17 +8,19 @@
 
 ; MsgBox %A_ScriptFullPath%`n%A_IsAdmin%`n%0% %1% %2% %3%
 
+
 { ; Основные переменные
-Global DataPath := A_WorkingDir "\tp.prv"
+Global WorkingDir := A_Temp "\TP"
+Global DataPath := WorkingDir "\tp.prv"
 Global DefaultHotkeysPath := A_Temp "\default.tp.prv"
 Global DefaultProvLogPath := "C:\Province Games\MTA\logs"
 Global DataSection := "TPData"
 Global HotkeySection := "TPHotkeys"
 
-Hotkey_IniPath(A_ScriptDir "\tp.prv")
+Hotkey_IniPath(DataPath)
 Hotkey_IniSection("TPHotkeys")
 
-Global Version := "2.31"  
+Global Version := "2.33"  
 Global GuiVersion := "2.3.1"
 Global TextCreator = techno & Sokol
 Global TextGroup = AHK Province
@@ -136,7 +138,7 @@ SetCapsOff()
 
 CheckUpdate()
 {
-	FileDelete, %A_Temp%\update.exe
+	FileDelete, %A_Temp%\update.ahk
 	Http := ComObjCreate("WinHttp.WinHttpRequest.5.1")
     Http.Open("GET", "https://github.com/sookolin/profile.tp/raw/main/version.profile.md")
     Http.Send()
@@ -170,11 +172,11 @@ CheckUpdate()
     Return
     
     Update:    
-    URL = https://github.com/sookolin/profile.tp/raw/main/ahk.tp.exe
+    URL = https://github.com/sookolin/profile.tp/raw/main/tp.ahk
     ;URL = https://my-files.su/Save/d6bcxl/ahk.tp.exe
-	URLDownloadToFile, %URL%, %A_Temp%\update.exe
+	URLDownloadToFile, %URL%, %A_Temp%\update.ahk
 	PID := DllCall("GetCurrentProcessId")
-	Run %A_Temp%\update.exe /update "%PID%" "%A_ScriptFullPath%"
+	Run % "*uiAccess " "%A_Temp%\update.ahk" /update "%PID%" "%A_ScriptFullPath%"
 	ExitApp
     
     SkipUpdate:
@@ -378,8 +380,8 @@ GetHotkeys()
 
 GetDefaultHotkeys()
 {
-    DefaultHotkeysPath = %A_Temp%\default.tp.prv
-    URLDownloadToFile https://raw.githubusercontent.com/sookolin/profile.tp/main/default.tp.prv, %A_Temp%\default.tp.prv
+    DefaultHotkeysPath = %WorkingDir%\default.tp.prv
+    URLDownloadToFile https://raw.githubusercontent.com/sookolin/profile.tp/main/default.tp.prv, %WorkingDir%\default.tp.prv
 	PID := DllCall("GetCurrentProcessId")
 
     for Field, Value in HotkeyFields
