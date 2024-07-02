@@ -24,7 +24,7 @@ Global Version := "2.40"
 Global GuiVersion := "2.4.0"
 Global TextCreator = techno & Sokol
 Global TextGroup = AHK Province
-Global TextFooter := "by techno && Sokol ft. Madjit_Martinez| AHK Province ©2022-2024"
+Global TextFooter := "by techno && Sokol ft. Madjit_Martinez | AHK Province ©2022-2024"
 Global DataFields := ["City", "License", "Surname", "Name", "SecondName", "Rank", "Post", "Signature", "ProvLogPath", "Gender", "MB"]
 
 Global HotkeysEnabled := False
@@ -468,7 +468,7 @@ Gui 1:Font, s10 CDefault, Bahnschrift
 ; -------------------------------------------------- Footer -------------------------------------------------
 Gui 1:Font, s10 c545454
 Gui 1:Add, Text, x002 y790 w100 h15, v%GuiVersion%
-Gui 1:Add, Text, x698 yp w300 h15 Right, %TextFooter%
+Gui 1:Add, Text, x598 yp w400 h15 Right, %TextFooter%
 
 Gui 1:Font, s16 c000000 Bold
 Gui 1:Add, Button, x950 y70 w30 h220 gButtonEdit vButtonEditText , И`nз`nм`nе`nн`nи`nт`nь
@@ -800,8 +800,8 @@ Gui 2:Add, Edit, xp yp+40 w300 r1 vEditLicense, %License%
 Gui 2:Add, ComboBox, xp yp+40 w300 r11 vChooseRank, %Ranks%
 Gui 2:Add, Edit, xp yp+40 w300 r1 vEditPost, %Post%
 Gui 2:Add, Edit, xp yp+40 w300 r1 vEditSignature, %Signature%
-Gui 2:Add, Edit, xp yp+40 w300 r1 ReadOnly vEditProvLogPath, %ProvLogPath%
-Gui 2:Add, Button, xp+305 yp w100 r1 gButtonChangePath, Изменить
+Gui 2:Add, Edit, xp yp+40 w300 h40 ReadOnly vEditProvLogPath, %ProvLogPath%
+Gui 2:Add, Button, xp+305 yp w100 h40 gButtonChangePath, Изменить
 Gui 2:Add, Radio, xp-220 yp+40 h15 Group %CheckedMale% vRadioMale, Мужской
 Gui 2:Add, Radio, xp yp+40 h15 %CheckedFemale% vRadioFemale, Женский
 Gui 2:Add, CheckBox, xp+200 yp-20 h15 %CheckedMB% vCheckMB, Мотобатальон
@@ -822,15 +822,15 @@ Gui 2:Add, Text, x320 yp+40 w300 r01, Подпись | *ИвановИИ*
 Gui 2:Add, Text, x420 yp+40 w300 r01, Путь до папки с логами
 
 Gui 2:Font, s16 C000000 Norm Bold
-Gui 2:Add, Button, x035 y460 w120 h50 gButtonReset, Сбросить
-Gui 2:Add, Button, x190 y460 w120 h50 gButtonSave Default, Сохранить
-Gui 2:Add, Button, x345 y460 w120 h50 gButtonCancel, Отменить
+Gui 2:Add, Button, x060 y465 w120 h50 gButtonReset, Сбросить
+Gui 2:Add, Button, x240 y465 w120 h50 gButtonSave Default, Сохранить
+Gui 2:Add, Button, x420 y465 w120 h50 gButtonCancel, Отменить
 
 
 ; -------------------------------------------------- Footer -------------------------------------------------
 Gui 2:Font, s10 c545454
 Gui 2:Add, Text, x002 y515 w100 h15, v%GuiVersion%
-Gui 2:Add, Text, x198 y515 w300 h15 Right, %TextFooter%
+Gui 2:Add, Text, x198 y515 w400 h15 Right, %TextFooter%
 
 Gui 2:Show, h530 w600, ГИБДД #5 | AHK Province
 Return
@@ -925,7 +925,7 @@ Gui 3:Add, Text, x220 y405 w300 r01, Методичка ГИБДД
 ; -------------------------------------------------- Footer -------------------------------------------------
 Gui 3:Font, s10 c545454 Norm
 Gui 3:Add, Text, x002 y445 w100 h15, v%GuiVersion%
-Gui 3:Add, Text, x198 y445 w300 h15 Right, %TextFooter%
+Gui 3:Add, Text, x98 y445 w400 h15 Right, %TextFooter%
 
 Gui 3:Show, h460 w500, ГИБДД #5 | AHK Province
 Return
