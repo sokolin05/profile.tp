@@ -153,29 +153,30 @@ CheckUpdate()
         if(Num>=3)
             ChangeList = %Changelist%`n• %Value%
     ;MsgBox % Version<NewVersion
+    SendInput % Version<NewVersion 
 	if(NewVersion <= Version)
     {
 		StartScript()
         Return
     }
-    Gui Upd:Destroy
+    Gui 4:Destroy
     IM = %WorkingDir%\ahk.ico
     IfExist, %IM%
     Menu, Tray, Icon, %IM%
-    Gui Upd:Font, s12 c000000 Bold, Bahnschrift
-    Gui Upd:Add, Text, , Вышла новая версия! Обновить с %GuiVersion% на %GuiNewVersion%?
-    Gui Upd:Font, s16
-    Gui Upd:Add, Link, xp yp+40, Список изменений (<a href="https://vk.com/@provinceahk-changelogtp">ChangeLog</a>):
-    Gui Upd:Font, s12 
+    Gui 4:Font, s12 c000000 Bold, Bahnschrift
+    Gui 4:Add, Text, , Вышла новая версия! Обновить с %GuiVersion% на %GuiNewVersion%?
+    Gui 4:Font, s16
+    Gui 4:Add, Link, xp yp+40, Список изменений (<a href="https://vk.com/@provinceahk-changelogtp">ChangeLog</a>):
+    Gui 4:Font, s12 
     for Num, Value in Versions
         if(Num>=3)
-            Gui Upd:Add, Text, xp yp+30, • %Value%
-    Gui Upd:Add, Button, xp yp+30 w145 gUpdate Default, Обновить
-    Gui Upd:Add, Button, xp+150 yp w145 gSkipUpdate, Не обновлять
-    Gui Upd:Add, Button, xp+150 yp w145 gClose, Закрыть скрипт
+            Gui 4:Add, Text, xp yp+30, • %Value%
+    Gui 4:Add, Button, xp yp+30 w145 gUpdate Default, Обновить
+    Gui 4:Add, Button, xp+150 yp w145 gSkipUpdate, Не обновлять
+    Gui 4:Add, Button, xp+150 yp w145 gClose, Закрыть скрипт
     
 
-    Gui Upd:Show,, AHK ГИБДД #5 | AHK Province
+    Gui 4:Show,, AHK ГИБДД #5 | AHK Province
     Return
     
     Update:    
@@ -189,6 +190,7 @@ CheckUpdate()
     ExitApp
     
     SkipUpdate:
+    Gui 4:Destroy
     StartScript()
     Return
     
