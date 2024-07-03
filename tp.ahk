@@ -22,7 +22,7 @@ Global HIDDEN_NOW := False
 Hotkey_IniPath(DataPath)
 Hotkey_IniSection("TPHotkeys")
 
-Global Version := "2.42"  
+Global Version := 242
 Global GuiVersion := "2.4.2"
 Global TextCreator = techno & Sokol
 Global TextGroup = AHK Province
@@ -146,14 +146,16 @@ CheckUpdate()
 	Http := ComObjCreate("WinHttp.WinHttpRequest.5.1")
     Http.Open("GET", "https://github.com/sookolin/profile.tp/raw/main/version.profile.md")
     Http.Send()
+    ;MsgBox % Http.ResponseText
     Versions := StrSplit(Http.ResponseText, "`n")
     NewVersion := Versions[1]
     GuiNewVersion := Versions[2]
+    ;MsgBox k%NewVersion%k
     for Num, Value in Versions
         if(Num>=3)
             ChangeList = %Changelist%`n• %Value%
     ;MsgBox % Version<NewVersion
-    SendInput % Version<NewVersion 
+    
 	if(NewVersion <= Version)
     {
 		StartScript()
