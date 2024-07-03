@@ -1,6 +1,7 @@
 ﻿#SingleInstance Force
 #NoEnv
 #Include %A_Temp%\TP\Hotkey.ahk
+FileEncoding UTF-8
 ; Script powered in 2024 by AHK Province & Techno's studio (techno)
 ; All rights reserwed
 ; vk.com/technostd
@@ -16,12 +17,13 @@ Global DefaultHotkeysPath := A_Temp "\default.tp.prv"
 Global DefaultProvLogPath := "C:\Province Games\MTA\logs"
 Global DataSection := "TPData"
 Global HotkeySection := "TPHotkeys"
+Global HIDDEN_NOW := False
 
 Hotkey_IniPath(DataPath)
 Hotkey_IniSection("TPHotkeys")
 
-Global Version := "2.40"  
-Global GuiVersion := "2.4.0"
+Global Version := "2.41"  
+Global GuiVersion := "2.4.1"
 Global TextCreator = techno & Sokol
 Global TextGroup = AHK Province
 Global TextFooter := "by techno && Sokol ft. Madjit_Martinez | AHK Province ©2022-2024"
@@ -53,6 +55,8 @@ Global InputType := False ; True - GUI, False - console
 Global Cities := "Мирный||Приволжск|Невский"
 Global Ranks := "рядовой||сержант|старшина|прапорщик|лейтенант|старший лейтенант|капитан|майор|подполковник|полковник|генерал-майор|генерал-лейтенант|генерал-полковник|генерал МВД"
 Global RanksArr := {"рядовой": "do На плечах закреплены пустые погоны.", "сержант": "do На плечах закреплены погоны с тремя лычками поперек погон.", "старшина": "do На плечах погоны с одной лычкой вдоль погон.", "прапорщик": "do На плечах погоны с двумя звездами вдоль по он.", "лейтенант": "do На плечах погоны с двумя звездами и просветом.", "старший лейтенант": "do На плечах погоны с тремя звездами и просветом.", "капитан": "do На плечах погоны с четырьмя звездами и просветом.", "майор": "do На плечах погоны с одной звездой и двумя просветами.", "подполковник": "do На плечах погоны с двумя звездами и двумя просветами.", "Полковник": "do На плечах погоны с тремя звездами и двумя просветами.", "генерал-майор": "do На плечах погоны с одной большой звездой.", "генерал-лейтенант": "do На плечах погоны с двумя большими звездами.", "генерал-полковник": "do На плечах погоны с тремя большими звездами.", "генерал МВД": "do На плечах погоны с одной большой звездой и гербом МВД."}
+
+Global PogonArr := {"рядовой": "пустые погоны", "сержант": "погоны с тремя лычками поперек погон", "старшина": "погоны с одной лычкой вдоль погон", "прапорщик": "погоны с двумя звездами вдоль погон", "лейтенант": "погоны с двумя звездами и просветом", "старший лейтенант": "погоны с тремя звездами и просветом", "капитан": "погоны с четырьмя звездами и просветом", "майор": "погоны с одной звездой и двумя просветами", "подполковник": "погоны с двумя звездами и двумя просветами", "Полковник": "погоны с тремя звездами и двумя просветами", "генерал-майор": "погоны с одной большой звездой", "генерал-лейтенант": "погоны с двумя большими звездами", "генерал-полковник": "погоны с тремя большими звездами", "генерал МВД": "погоны с одной большой звездой и гербом МВД"}
 
 Global City
 Global License
@@ -172,12 +176,14 @@ CheckUpdate()
     Return
     
     Update:    
-    URL = https://github.com/sookolin/profile.tp/raw/main/tp.ahk
+    URL = https://raw.githubusercontent.com/sookolin/profile.tp/main/tp.ahk
     ;URL = https://my-files.su/Save/d6bcxl/ahk.tp.exe
 	URLDownloadToFile, %URL%, %A_Temp%\update.ahk
+    ;MsgBox %A_Temp%\update.ahk
 	PID := DllCall("GetCurrentProcessId")
-	Run % "*uiAccess " "%A_Temp%\update.ahk" /update "%PID%" "%A_ScriptFullPath%"
-	ExitApp
+
+	Run *uiAccess %A_Temp%\update.ahk /update %PID% %A_ScriptFullPath%
+    ExitApp
     
     SkipUpdate:
     StartScript()
@@ -236,6 +242,7 @@ ParamCheck()
  
         CheckAdmin()
         CheckUpdate()
+;        StartScript()
 }
 
 
@@ -254,6 +261,8 @@ Menu, Tray, Rename, VKmemo, Памятка
 Menu, Tray, Add ; SEPARATOR
 Menu, Tray, Add, ReloadMenu
 Menu, Tray, Rename, ReloadMenu, Перезапуск
+Menu, Tray, Add, HideShowMenu
+Menu, Tray, Rename, HideShowMenu, Свернуть
 Menu, Tray, Add, ExitMenu
 Menu, Tray, Rename, ExitMenu, Закрыть
 Menu, Tray, Tip, AHK ГИБДД #5 (%GuiVersion%)
@@ -270,6 +279,20 @@ Return
 ReloadMenu:
 Reload
 ExitApp 
+
+HideShowMenu:
+If HIDDEN_NOW
+{
+Menu, Tray, Rename, Развернуть, Свернуть
+Gui Show
+}
+Else
+{
+Menu, Tray, Rename, Свернуть, Развернуть
+Gui Hide
+}
+HIDDEN_NOW := !HIDDEN_NOW
+Return
 
 ExitMenu:
 ExitApp
@@ -304,19 +327,19 @@ RefreshData()
     if(City=="Мирный")
     {
         Struct=УГИБДД по г. Мирный
-        Tag=ГИБДД-М    
+        Tag=УГИБДД-М    
     }
 
     if(City=="Приволжск")
     {
         Struct=УГИБДД по г. Приволжск
-        Tag=ГИБДД-П    
+        Tag=УГИБДД-П    
     }
     
     if(City=="Невский")
     {
         Struct=УГИБДД по г. Невский
-        Tag=ГИБДД-Н    
+        Tag=УГИБДД-Н    
     }
     
     if(Gender=="Male"){
@@ -1041,9 +1064,14 @@ GetTryRes()
     }
 }
 
+ReadComFile(FileName){
+    Loop, read, %FileName%
+        SendChat(Encoded(A_LoopReadLine), ComFileDelay)
+}
+
 GetArgsForHotstring(Hotstring, Target)
 {
-    SendPlay /%Hotstring%{Space}
+    SendPlay SendPlay ^A{Delete}/%Hotstring%{Space}
     Input %Target%, V, {Enter}
 }
 
@@ -1080,215 +1108,21 @@ Return
 
 { ; Hotstrings - строки автозамены
 
-{ ; Присяга
 
-{ ;
-:?:/пппсн::
-SendPlay {Enter}
-SendChat("ro [" Tag "][ГУ МВД-Н] Принято.", "0")
-Return
-
-:?:/пппсм::
-SendPlay {Enter}
-SendChat("ro [" Tag "][ГУ МВД-М] Принято.", "0")
-Return
-
-:?:/пппсп::
-SendPlay {Enter}
-SendChat("ro [" Tag "][ГУ МВД-П] Принято.", "0")
-Return
-
-:?:/пдпсн::
-SendPlay {Enter}
-SendChat("ro [" Tag "][ГИБДД-Н] Принято.", "0")
-Return
-
-:?:/пдпсм::
-SendPlay {Enter}
-SendChat("ro [" Tag "][ГИБДД-М] Принято.", "0")
-Return
-
-:?:/пдпсп::
-SendPlay {Enter}
-SendChat("ro [" Tag "][ГИБДД-П] Принято.", "0")
-Return
-
-:?:/пк::
-GetArgsForHotstring("пк", "ToTag")
-SendPlay {Enter}
-SendChat("ro [" Tag "][" ToTag "] Принято.", "0")
-Return
-
-:?:/пдк::
-GetArgsForHotstring("пк", "ToTag")
-SendPlay {Enter}
-SendChat("d [" Tag "][" ToTag "] Принято.", "0")
-Return
-
-:?:/наряд::
-GetArgsForHotstring("наряд", "Place")
-SendPlay {Enter}
-SendChat("ro [" Tag "][ГУ МВД] Требуется наряд ППС. Местоположение: " Place ".", "0")
-Return
-
-:?:/нарядкдчм::
-SendPlay {Enter}
-SendChat("ro [" Tag "][ГУ МВД] Требуется сотрудник ППС к дежурной части города Мирный.", "0")
-Return
-
-:?:/нарядкдчп::
-SendPlay {Enter}
-SendChat("ro [" Tag "][ГУ МВД] Требуется сотрудник ППС к дежурной части города Невский.", "0")
-Return
-
-:?:/нарядкдчн::
-SendPlay {Enter}
-SendChat("ro [" Tag "][ГУ МВД] Требуется сотрудник ППС к дежурной части города Приволжск.", "0")
-Return
-
-:?:/врозыск::
-GetArgsForHotstring("врозыск", "Pass")
-SendPlay {Enter}
-SendChat("ro [" Tag "][ГУ МВД] Объявите в розыск гражданина с серией паспорта " Pass ".", "0")
-Return
-
-:?:/об+::
-SendPlay {Enter}
-SendChat("ro [" Tag "][МВД] Выехал в областное патрулирование.", "0")
-Return
-
-:?:/обп::
-SendPlay {Enter}
-SendChat("ro [" Tag "][МВД] Контролирую город [П].", "0")
-Return
-
-:?:/обм::
-SendPlay {Enter}
-SendChat("ro [" Tag "][МВД] Контролирую город [М].", "0")
-Return
-
-:?:/обн::
-SendPlay {Enter}
-SendChat("ro [" Tag "][МВД] Контролирую город [Н].", "0")
-Return
-
-:?:/об-::
-SendPlay {Enter}
-SendChat("ro [" Tag "][МВД] Закончил областное патрулирование.", "0")
-Return
-
-:?:/вп+::
-SendPlay {Enter}
-SendChat("ro [" Tag " ВП][МВД] Начал воздушное патрулирование.", "0")
-Return
-
-:?:/вп::
-SendPlay {Enter}
-SendChat("ro [" Tag " ВП][МВД] Продолжаю воздушное патрулирование.", "0")
-Return
-
-:?:/вп-::
-SendPlay {Enter}
-SendChat("ro [" Tag " ВП][МВД] Закончил воздушное патрулирование. Иду на посадку.", "0")
-Return
-
-:?:/сб+::
-SendPlay {Enter}
-SendChat("ro [" Tag " СБ][МВД] Начали спецоперацию по отлову граждан с большим количеством неоплаченных штрафов.", "0")
-Return
-
-:?:/сб::
-SendPlay {Enter}
-SendChat("ro [" Tag " СБ][МВД] Продолжаем спецоперацию по отлову граждан с большим количеством неоплаченных штрафов.", "0")
-Return
-
-:?:/сб-::
-SendPlay {Enter}
-SendChat("ro [" Tag " СБ][МВД] Закончили спецоперацию по отлову граждан с большим количеством неоплаченных штрафов.", "0")
-Return
-
-:?:/код0::
-GetArgsForHotstring("код0", "Place")
-SendPlay {Enter}
-SendChat("ro [" Tag "][МВД] Код-0. Местоположение: " Place ".", "0")
-Return
-
-:?:/код0п::
-GetArgsForHotstring("код0п", "Place")
-SendPlay {Enter}
-SendChat("me нажал кнопку тревоги на панели управления системы ""Око""", "0")
-SendChat("do Сигнал тревоги с координатами отправлен в дежурную часть управления.", "0")
-Sleep 15000
-SendChat("ro [Система ""Око""][МВД] Код-0. Активирована кнопка тревоги. Местоположение: " Place ".", "0")
-Return
-
-:?:/код0с::
-GetArgsForHotstring("код0с", "Place")
-SendPlay {Enter}
-SendChat("me незаметно нажал кнопку тревоги, вшитую в форму и подключённую к КПК", "0")
-SendChat("do Сигнал тревоги с координатами отправлен в дежурную часть управления.", "0")
-Sleep 15000
-SendChat("ro [КПК " License "][МВД] Код-0. Активирована кнопка тревоги. Местоположение: " Place ".", "0")
-Return
-
-:?:/асмп::
-GetArgsForHotstring("асмп", "Place")
-SendPlay {Enter}
-SendChat("d [" Tag "][МЗ] Требуется АСМП. Местоположение: " Place ".", "0")
-Return
-
-
-/*
-:?:/::
-SendPlay {Enter}
-SendChat("", "0")
-Return
-*/
-}
-
-:?:/присяга+::
-SendPlay {Enter}
-SendChat("do В руках папка с присягой МВД.", "500")
-SendChat("me передал папку с присягой сотруднику МВД", "0")
-Return
-
-:?:/присяга::
-SendPlay {Enter}
-SendChat("me взял папку с присягой, затем открыл её", "2000")
-SendChat("me положив правую руку к сердцу, начал читать присягу вслух", "2000")
-SendChat("say Я, " Surname " " Name " " SecondName ", поступая на службу в органы внутренних дел,", "2000")
-SendChat("say торжественно присягаю на верность Республике Провинции и ее народу!", "2000")
-SendChat("say Клянусь при осуществлении полномочий сотрудника органов внутренних дел", "2000")
-SendChat("say уважать и защищать права и свободы человека и гражданина,", "2000")
-SendChat("say свято соблюдать Конституцию Республики Провинции и федеральные законы!", "2000")
-SendChat("say Быть мужественным, честным и бдительным, не щадить своих сил в борьбе с преступностью,", "2000")
-SendChat("say достойно исполнять свой служебный долг и возложенные на меня обязанности", "2000")
-SendChat("say по обеспечению безопасности,законности и правопорядка,", "2000")
-SendChat("хранить государственную и служебную тайну.", "2000")
-SendChat("say Служу Провинции, служу Закону!", "2000")
-SendChat("me закрыв папку с присягой, передал ее генералу", "0")
-Return
-
-:?:/присяга-::
-SendPlay {Enter}
-SendChat("me взял папку с присягой у сотрудника МВД", "0")
-Return
-
-}
-    {
+{
     
         ; #include NPD\KoAP.ahk
-        { ; #include prisyaga.ahk
+{ ; #include prisyaga.ahk
         :?:/присяга+::
 SendPlay {Enter}
 SendChat("do В руках папка с присягой МВД.", "500")
-SendChat("me передал папку с присягой сотруднику МВД", "0")
+SendChat("me переда" lla " папку с присягой сотруднику МВД", "0")
 Return
 
 :?:/присяга::
 SendPlay {Enter}
-SendChat("me взял папку с присягой, затем открыл её", "2000")
-SendChat("me положив правую руку к сердцу, начал читать присягу вслух", "2000")
+SendChat("me взя" lla " папку с присягой, затем открыл её", "2000")
+SendChat("me положив правую руку к сердцу, нача" lla " читать присягу вслух", "2000")
 SendChat("say Я, " Surname " " Name " " SecondName ", поступая на службу в органы внутренних дел,", "2000")
 SendChat("say торжественно присягаю на верность Республике Провинции и ее народу!", "2000")
 SendChat("say Клянусь при осуществлении полномочий сотрудника органов внутренних дел", "2000")
@@ -1299,15 +1133,15 @@ SendChat("say достойно исполнять свой служебный д
 SendChat("say по обеспечению безопасности,законности и правопорядка,", "2000")
 SendChat("хранить государственную и служебную тайну.", "2000")
 SendChat("say Служу Провинции, служу Закону!", "2000")
-SendChat("me закрыв папку с присягой, передал ее генералу", "0")
+SendChat("me закрыв папку с присягой, переда" lla " ее генералу", "0")
 Return
 
 :?:/присяга-::
 SendPlay {Enter}
-SendChat("me взял папку с присягой у сотрудника МВД", "0")
+SendChat("me взя" lla " папку с присягой у сотрудника МВД", "0")
 Return
         }
-        { ; #include radio.ahk
+{ ; #include radio.ahk
         :?:/пппсн::
 SendPlay {Enter}
 SendChat("ro [" Tag "][ГУ МВД-Н] Принято.", "0")
@@ -1441,7 +1275,7 @@ Return
 :?:/код0п::
 GetArgsForHotstring("код0п", "Place")
 SendPlay {Enter}
-SendChat("me нажал кнопку тревоги на панели управления системы ""Око""", "0")
+SendChat("me нажа" lla " кнопку тревоги на панели управления системы ""Око""", "0")
 SendChat("do Сигнал тревоги с координатами отправлен в дежурную часть управления.", "0")
 Sleep 15000
 SendChat("ro [Система ""Око""][МВД] Код-0. Активирована кнопка тревоги. Местоположение: " Place ".", "0")
@@ -1450,10 +1284,10 @@ Return
 :?:/код0с::
 GetArgsForHotstring("код0с", "Place")
 SendPlay {Enter}
-SendChat("me незаметно нажал кнопку тревоги, вшитую в форму и подключённую к КПК", "0")
+SendChat("me незаметно нажа" lla " кнопку тревоги, вшитую в форму и подключённую к планшету марки ""MIG LT11i""", "0")
 SendChat("do Сигнал тревоги с координатами отправлен в дежурную часть управления.", "0")
 Sleep 15000
-SendChat("ro [КПК " License "][МВД] Код-0. Активирована кнопка тревоги. Местоположение: " Place ".", "0")
+SendChat("ro [MIG LT11i " License "][МВД] Код-0. Активирована кнопка тревоги. Местоположение: " Place ".", "0")
 Return
 
 :?:/асмп::
@@ -1746,7 +1580,7 @@ Return
     SendChat("do На груди закреплен полицейский знак с личным номером: " License ".", "500")
     
     Pogon:
-    SendChat(RanksArr[Rank], "500")
+    SendChat("do На плечах " PogonArr[Rank] ".", "500")
     Return
     
     LicenseOpen:
@@ -1823,12 +1657,13 @@ Return
     ReturnDocuments:
     SendChat("do Документ гражданина в нагрудном кармане.", "500")
     SendChat("me доста" lla " документы из нагрудного кармана и верну" lla " гражданину", "500")
-    SendChat("say Уважаемый, держите ваши документы. Удачи на дорогах, соблюдайте ПДД.", "0")
+    SendChat("say Уважаемый, держите ваши документы. Удачи на дорогах, соблюдайте ПДД.", "500")
+    SendChat("b /me взял(-а) документы", "0")
     Return
     
     Cuff:
     GetInput("ID", "Надеть наручники.`nВведите ID подозреваемого:", "Надеть наручники. Введите ID подозреваемого:")
-    SendChat("say Гражданин, Вы имеете право хранить молчание!", "5")
+    SendChat("say Гражданин, вы имеете право хранить молчание!", "5")
     SendChat("me сня" lla " наручники с пояса и застегну" lla " их на нарушителе", "5")
     SendChat("cuff " ID, "0")
     Return
@@ -2081,22 +1916,22 @@ Return
     
     AlcoGet:
     SendChat("do Алкотестер в кармане.", "500")
-    SendChat("me достал из кармана опломбированный электронный алкотестер с клеймом и показал его человеку напротив", "0")
+    SendChat("me доста" lla " из кармана опломбированный электронный алкотестер с клеймом и показал его человеку напротив", "0")
     Return
     
     AlcoSertOn:
-    SendChat("do В нагрудном кармане сотрудника акт о техническом состоянии алкотестера с его пригодности к эксплуатации по назначению.", "500")
-    SendChat("me достал акт из нагрудного кармана и передал человеку напротив", "500")
+    SendChat("do В нагрудном кармане сотрудни" kaci " акт о техническом состоянии алкотестера с его пригодности к эксплуатации по назначению.", "500")
+    SendChat("me доста" lla " акт из нагрудного кармана и передал человеку напротив", "500")
     SendChat("do Акт о техническом состоянии алкотестера: Алкотестер марки 'AlcoHunter' прошел полную проверку на достоверность измерений. ", "0")
     Return
     
     AlcoSertOff:
-    SendChat("me взял акт и убрал его в нагрудный карман", "500")
+    SendChat("me взял акт и убра" lla " его в нагрудный карман", "500")
     Return
     
     AlcoPipe:
     SendChat("do В кармане одноразовый мундштук в герметичной упаковке.", "500")
-    SendChat("me достал из кармана одноразовый мундштук и протянул его человеку напротив", "500")
+    SendChat("me доста" lla " из кармана одноразовый мундштук и протянул его человеку напротив", "500")
     Return
     
     AlcoOn:
@@ -2152,7 +1987,7 @@ Return
  
     TaumetrSert:
     SendChat("me показа" lla " свидетельство гражданину напротив", "500")
-    SendChat("do Свидетельство о поверке: устройство для измерения светопропускаемости тонировки ""Тоник"", действительно до 31.12.2022.", "0")
+    SendChat("do Свидетельство о поверке: устройство для измерения светопропускаемости тонировки ""Тоник"", действительно до 31.12." A_YYYY ".", "0")
     Return
     
     TaumetrSertOff:
@@ -2192,13 +2027,31 @@ Return
     
     RaidOrderOn:
     SendChat("do В нагрудном кармане лежит приказ о проведении рейда.", "500")
-    SendChat("me достал приказ, развернул его и показал гражданину напротив", "500")
-    SendChat("do Приказ №098: гербовая печать, подпись начальника ГУОБДД МВД РП [от " A_DD "." A_MM "." A_YYYY "].", "0")
+    SendChat("me доста" lla " приказ, разверну" lla " его и показа" lla " гражданину напротив", "500")
+    SendChat("do Приказ №098: гербовая печать, подпись начальника " Struct " МВД РП [от " A_DD "." A_MM "." A_YYYY "].", "0")
     Return
     
     RaidOrderOff:
-    SendChat("me сложил приказ и убрал в нагрудный карман", "500")
-    SendChat("do В нагрудном кармане лежит приказ о рейде.", "0")
+    SendChat("me сложи" lla " приказ и убра" lla " в нагрудный карман", "0")
     Return
+    
+    SayPogon:
+    SendChat("say Снимайте старые погоны и сдайте удостоверение.", "500")
+    Return
+
+    GivePogon:
+    SendChat("me забра" lla " погоны и удостоверение сотрудника и убра" lla " их в нижний ящик стола", "500")
+    SendChat("do Новые погоны и пустые удостоверения с подписью начальника УГИБДД в верхнем ящике стола.", "500")
+    SendChat("me доста" lla " " PogonArr[Rank] " и положи" lla " перед сотрудником", "500")
+    SendChat("me доста" lla " пустое удостоверение и заполни" lla " данные сотрудника", "500")
+    SendChat("me вклеи" lla " фотографию сотрудника и постави" lla " гербовую печать управления", "500")
+    SendChat("me закры" lla " удостоверение и положи" lla " перед сотрудником", "500")
+    SendChat("say Закрепляйте погоны, забирайте удостоверение. Поздравляю с повышением!", "0")
+    Return
+    
+    ReadLection:
+    ReadComFile(FileForRead)
+    Return
+
 
 }   
