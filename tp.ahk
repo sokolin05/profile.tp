@@ -22,8 +22,8 @@ Global HIDDEN_NOW := False
 Hotkey_IniPath(DataPath)
 Hotkey_IniSection("TPHotkeys")
 
-Global Version := "2.41"  
-Global GuiVersion := "2.4.1"
+Global Version := "2.42"  
+Global GuiVersion := "2.4.2"
 Global TextCreator = techno & Sokol
 Global TextGroup = AHK Province
 Global TextFooter := "by techno && Sokol ft. Madjit_Martinez | AHK Province ©2022-2024"
@@ -152,6 +152,7 @@ CheckUpdate()
     for Num, Value in Versions
         if(Num>=3)
             ChangeList = %Changelist%`n• %Value%
+    ;MsgBox % Version<NewVersion
 	if(NewVersion <= Version)
     {
 		StartScript()
