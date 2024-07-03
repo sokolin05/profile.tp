@@ -159,7 +159,9 @@ CheckUpdate()
         Return
     }
     Gui Upd:Destroy
-    
+    IM = %WorkingDir%\ahk.ico
+    IfExist, %IM%
+    Menu, Tray, Icon, %IM%
     Gui Upd:Font, s12 c000000 Bold, Bahnschrift
     Gui Upd:Add, Text, , Вышла новая версия! Обновить с %GuiVersion% на %GuiNewVersion%?
     Gui Upd:Font, s16
